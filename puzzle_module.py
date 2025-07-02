@@ -17,12 +17,11 @@ class puzzle_o_eight:
     def __init__(self, other = None):
         if other is None:
             self.matr: list[list[int]] = [[0 for _ in range(3)] for _ in range(3)]
-            num = 0
-            for i in range(3):
-                for j in range (3):
-                    self.matr[i][j] = num
-                    num = num + 1
-            self.blank_pos = [0,0]
+            goal = [[1,2,3],[4,0,5],[6,7,8]]
+            self.matr = [row[:] for row in goal]
+            self.blank_pos = [1,1]
+
+            
         else:
             self.matr = [row[:] for row in other.matr]
             self.blank_pos = other.blank_pos[:]
@@ -35,8 +34,9 @@ class puzzle_o_eight:
                     ret += '█' + ' '
                 else:
                     ret += str(self.matr[i][j]) + ' '
-            
-            ret += '\n'
+            if(i != 2):
+                ret += '\n'
+    
         return ret
     def self_random_shuffle(self, shuf_iter):
         for iteration in range(shuf_iter): # yes one hundred whole times
@@ -112,13 +112,29 @@ class puzzle_o_eight:
         return hash(tuple(tuple(row) for row in self.matr))
     
     def self_legal_shuffle(self, iter):
+        goal = [[1,2,3],[4,0,5],[6,7,8]]
+        self.matr = [row[:] for row in goal]
+        self.blank_pos = [1, 1]
+
         moves = [move.LEFT, move.UP, move.RIGHT, move.DOWN]
         for i in range(iter):
-            index = random.randint(0, 3)
-            try:
-                self.__self_move(moves[index])
-            except Exception as e:
-                pass
+            move_success = False
+            while not move_success:
+                indx = random.randint(0, 3)
+                try:
+                    self.__self_move(moves[indx])
+                    move_success = True
+                except Exception as e:
+                    move_success = False
+        
+        for i in range(3):
+            for j in range(3):
+                if(self.matr[i][j] == 0):
+                    self.blank_pos = [i, j]
+                    break # just in case
+
+
+
     def __lt__(self, other):
         return False
     def __gt__(self, other):
