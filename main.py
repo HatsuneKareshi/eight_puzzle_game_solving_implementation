@@ -2,9 +2,9 @@ from algorithms import *
 import time
 
 
-def bench_once():
+def bench_once(shuffle_iter = 100):
     sample = puzzle_o_eight()
-    sample.self_legal_shuffle(100)
+    sample.self_legal_shuffle(shuffle_iter)
     print(sample)
 
     bfs = puzzle_o_eight(sample)
@@ -12,85 +12,65 @@ def bench_once():
     dfs = puzzle_o_eight(sample)
 
     start = time.perf_counter()
-    res, p = bfs_8puzzle_solve(bfs)
+    res, p, stats = bfs_8puzzle_solve(bfs)
     end = time.perf_counter()
     if(res is None):
         print("NON-SOLVABLE TIME!!!")
         print("execution time for bfs this run: ", end - start)
     else:
-        print("final state:")
+        print("final state (BFS):")
         print(res)
         print("execution time for bfs this run: ", end - start)
         print("number of steps in solution: ", len(p))
+        print("nodes expanded:", stats[0])
+        print("max frontier count:", stats[1])
+        print("==========================")
 
 
     start = time.perf_counter()
-    res, p = a_star_8puzzle_solve(astar)
+    res, p, stats = a_star_8puzzle_solve(astar)
     end = time.perf_counter()
     if(res is None):
         print("NON-SOLVABLE TIME!!!")
         print("execution time for a*  this run: ", end - start)
     else:
-        print("final state:")
+        print("final state (A*):")
         print(res)
         print("execution time for a*  this run: ", end - start)
         print("number of steps in solution: ", len(p))
+        print("nodes expanded:", stats[0])
+        print("max frontier count:", stats[1])
+        print("==========================")
 
     start = time.perf_counter()
-    res, p = dfs_8puzzle_solve(dfs)
+    res, p, stats = dfs_8puzzle_solve(dfs)
     end = time.perf_counter()
     if(res is None):
         print("NON-SOLVABLE TIME!!!")
         print("execution time for dfs this run: ", end - start)
     else:
-        print("final state:")
+        print("final state (DFS):")
         print(res)
         print("execution time for dfs this run: ", end - start)
         print("number of steps in solution: ", len(p))
+        print("nodes expanded:", stats[0])
+        print("max frontier count:", stats[1])
 
-# def avg_bench(iter):
-#     time_bfs = 0
-#     time_astar = 0
-#     time_dfs = 0
+# sample = puzzle_o_eight()
+# sample.self_legal_shuffle(4)
 
-#     for i in range(iter):
-#         sample = puzzle_o_eight()
-#         sample.self_legal_shuffle(100)
-#         bfs = puzzle_o_eight(sample)
-#         astar = puzzle_o_eight(sample)
-#         dfs = puzzle_o_eight(sample)
+# bfs = puzzle_o_eight(sample)
+# a_star = puzzle_o_eight(sample)
 
-#         start = time.perf_counter()
-#         res, p = bfs_8puzzle_solve(bfs)
-#         end = time.perf_counter()
-#         time_bfs += end-start
+# print("8-puzzle PROBLEM:")
+# print(sample)
 
+# print("\nBFS:")
+# bfs_8puzzle_solve(bfs, True)
 
-#         start = time.perf_counter()
-#         res, p = a_star_8puzzle_solve(astar)
-#         end = time.perf_counter()
-#         time_astar += end-start
-        
+# _ = input("ENTER TO CONTINUE TO A*")
 
-#         # start = time.perf_counter()
-#         # res, p = dfs_8puzzle_solve(dfs)
-#         # end = time.perf_counter()
-#         # time_dfs += end-start
+# print("\nA*")
+# a_star_8puzzle_solve(a_star, True)
 
-    
-#     print("AVERAGE OVER", iter, "RUNS:")
-#     print("BFS\t: ", time_bfs / float(iter))
-#     print("A*\t: ", time_astar / float(iter))
-#     # print("DFS\t: ", time_dfs / float(iter))
-
-# a = puzzle_o_eight()
-# a.self_legal_shuffle(4)
-# print("SOLVING FOR: ")
-# print(a)
-# print("SOLUTION BELOW")
-# res, steps = dfs_8puzzle_solve(a, 1)
-# for sp in steps:
-#     print(sp)
-#     print("next")
-
-bench_once()
+bench_once(25)

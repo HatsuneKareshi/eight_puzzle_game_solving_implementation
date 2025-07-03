@@ -6,6 +6,10 @@ import heapq
 
 
 def dfs_8puzzle_solve(puzzle, tracing=False):
+    expansion_cnt = 0
+    max_frtr = 0
+    # stats. return these in a tuple
+
     visited_set = set()
     frontier = []
     frontier.append((puzzle, []))
@@ -14,7 +18,7 @@ def dfs_8puzzle_solve(puzzle, tracing=False):
         print("WARNING: DEPTH FIRST SEARCH MAY LEAD TO SPECTACULARLY LONG PATHS. \nCONTINUE AT YOUR OWN PERIL")
         choice = input("press [y] and enter to continue. anything else to return and skip search.")
         if(choice != "y" and choice != "Y" ):
-            return None, None
+            return None, None, (expansion_cnt, max_frtr)
         
     
     while len(frontier) > 0:
@@ -29,7 +33,7 @@ def dfs_8puzzle_solve(puzzle, tracing=False):
                 
         visited_set.add(cur_puz_state)
         if(cur_puz_state.heuristics() == 0):
-            return cur_puz_state, path + [cur_puz_state]
+            return cur_puz_state, path + [cur_puz_state], (expansion_cnt, max_frtr)
 
         next_moves = cur_puz_state.get_possible_move()
         if tracing:
@@ -46,13 +50,20 @@ def dfs_8puzzle_solve(puzzle, tracing=False):
                 print("___")
 
             frontier.append((nb, path + [cur_puz_state]))
+
+        max_frtr = max(len(frontier), max_frtr)
+        expansion_cnt += 1
         
         if tracing:
             _ = input("enter to continue next iteration")
         # finds neighbors and shoves them in. no path tracking yet
-    return None, None
+    return None, None, (expansion_cnt, max_frtr)
 
 def bfs_8puzzle_solve(puzzle, tracing=False):
+    expansion_cnt = 0
+    max_frtr = 0
+    # stats. return these in a tuple
+
     visited_set = set()
     frontier = deque()
     frontier.append((puzzle, []))
@@ -69,7 +80,7 @@ def bfs_8puzzle_solve(puzzle, tracing=False):
                 
         visited_set.add(cur_puz_state)
         if(cur_puz_state.heuristics() == 0):
-            return cur_puz_state, path + [cur_puz_state]
+            return cur_puz_state, path + [cur_puz_state], (expansion_cnt, max_frtr)
 
         next_moves = cur_puz_state.get_possible_move()
         if tracing:
@@ -86,13 +97,20 @@ def bfs_8puzzle_solve(puzzle, tracing=False):
                 print("___")
 
             frontier.append((nb, path + [cur_puz_state]))
+        
+        max_frtr = max(len(frontier), max_frtr)
+        expansion_cnt += 1
 
         if tracing:
             _ = input("enter to continue next iteration")
         # finds neighbors and shoves them in. no path tracking yet
-    return None, None
+    return None, None, (expansion_cnt, max_frtr)
 
 def a_star_8puzzle_solve(puzzle, tracing=False):
+    expansion_cnt = 0
+    max_frtr = 0
+    # stats. return these in a tuple
+
     counter = count() # tie breaker thing for the minheap
     visited_set = set()
     frontier = []
@@ -110,7 +128,7 @@ def a_star_8puzzle_solve(puzzle, tracing=False):
         visited_set.add(cur_puz_state)
 
         if(cur_puz_state.heuristics() == 0):
-            return cur_puz_state, path + [cur_puz_state]
+            return cur_puz_state, path + [cur_puz_state], (expansion_cnt, max_frtr)
         
         next_moves = cur_puz_state.get_possible_move()
         if tracing:
@@ -127,8 +145,11 @@ def a_star_8puzzle_solve(puzzle, tracing=False):
 
             new_path = path + [cur_puz_state]
             heapq.heappush(frontier, (nb.heuristics() + len(new_path), next(counter), nb, new_path))
+
+        max_frtr = max(len(frontier), max_frtr)
+        expansion_cnt += 1
         
         if tracing:
             _ = input("enter to continue next iteration")
 
-    return None, None
+    return None, None, (expansion_cnt, max_frtr)
