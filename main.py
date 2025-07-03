@@ -84,8 +84,11 @@ def bench_once():
 #     # print("DFS\t: ", time_dfs / float(iter))
 
 # a = puzzle_o_eight()
-# a.self_legal_shuffle(100)
-# res, steps = a_star_8puzzle_solve(a)
+# a.self_legal_shuffle(4)
+# print("SOLVING FOR: ")
+# print(a)
+# print("SOLUTION BELOW")
+# res, steps = dfs_8puzzle_solve(a, 1)
 # for sp in steps:
 #     print(sp)
 #     print("next")

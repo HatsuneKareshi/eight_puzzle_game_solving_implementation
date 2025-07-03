@@ -5,13 +5,24 @@ import heapq
 
 
 
-def dfs_8puzzle_solve(puzzle):
+def dfs_8puzzle_solve(puzzle, tracing=False):
     visited_set = set()
     frontier = []
     frontier.append((puzzle, []))
+
+    if tracing:
+        print("WARNING: DEPTH FIRST SEARCH MAY LEAD TO SPECTACULARLY LONG PATHS. \nCONTINUE AT YOUR OWN PERIL")
+        choice = input("press [y] and enter to continue. anything else to return and skip search.")
+        if(choice != "y" and choice != "Y" ):
+            return None, None
+        
     
     while len(frontier) > 0:
         cur_puz_state, path = frontier.pop()
+
+        if tracing:
+            print("currently expanding:")
+            print(cur_puz_state)
 
         if cur_puz_state in visited_set:
             continue
@@ -21,23 +32,37 @@ def dfs_8puzzle_solve(puzzle):
             return cur_puz_state, path + [cur_puz_state]
 
         next_moves = cur_puz_state.get_possible_move()
+        if tracing:
+            print("neighbors:")
+
         for mv in next_moves:
             nb = cur_puz_state.move_ret_anew(mv)
     
             if nb in visited_set:
                 continue
 
+            if tracing:
+                print(nb)
+                print("___")
+
             frontier.append((nb, path + [cur_puz_state]))
+        
+        if tracing:
+            _ = input("enter to continue next iteration")
         # finds neighbors and shoves them in. no path tracking yet
     return None, None
 
-def bfs_8puzzle_solve(puzzle):
+def bfs_8puzzle_solve(puzzle, tracing=False):
     visited_set = set()
     frontier = deque()
     frontier.append((puzzle, []))
     
     while len(frontier) > 0:
         cur_puz_state, path = frontier.popleft()
+        
+        if tracing:
+            print("currently expanding:")
+            print(cur_puz_state) 
 
         if cur_puz_state in visited_set:
             continue
@@ -47,17 +72,27 @@ def bfs_8puzzle_solve(puzzle):
             return cur_puz_state, path + [cur_puz_state]
 
         next_moves = cur_puz_state.get_possible_move()
+        if tracing:
+            print("neighbors:")
+
         for mv in next_moves:
             nb = cur_puz_state.move_ret_anew(mv)
     
             if nb in visited_set:
                 continue
+            
+            if tracing:
+                print(nb)
+                print("___")
 
             frontier.append((nb, path + [cur_puz_state]))
+
+        if tracing:
+            _ = input("enter to continue next iteration")
         # finds neighbors and shoves them in. no path tracking yet
     return None, None
 
-def a_star_8puzzle_solve(puzzle):
+def a_star_8puzzle_solve(puzzle, tracing=False):
     counter = count() # tie breaker thing for the minheap
     visited_set = set()
     frontier = []
@@ -65,6 +100,10 @@ def a_star_8puzzle_solve(puzzle):
 
     while(len(frontier) > 0):
         cur_f, _, cur_puz_state, path = heapq.heappop(frontier)
+        
+        if tracing:
+            print("currently expanding:")
+            print(cur_puz_state) 
 
         if cur_puz_state in visited_set:
             continue
@@ -74,12 +113,22 @@ def a_star_8puzzle_solve(puzzle):
             return cur_puz_state, path + [cur_puz_state]
         
         next_moves = cur_puz_state.get_possible_move()
+        if tracing:
+            print("neighbors:")
+
         for mv in next_moves:
             nb = cur_puz_state.move_ret_anew(mv)
             if(nb in visited_set):
                 continue
 
+            if tracing:
+                print(nb)
+                print("___")
+
             new_path = path + [cur_puz_state]
             heapq.heappush(frontier, (nb.heuristics() + len(new_path), next(counter), nb, new_path))
+        
+        if tracing:
+            _ = input("enter to continue next iteration")
 
     return None, None
