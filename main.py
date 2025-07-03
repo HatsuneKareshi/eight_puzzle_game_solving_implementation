@@ -74,3 +74,13 @@ def bench_once(shuffle_iter = 100):
 # a_star_8puzzle_solve(a_star, True)
 
 bench_once(25)
+
+# Should you want to run something yourself:
+# puzzle_o_eight() constructor returns a new object representing the puzzle, in its completed state. to use, simply
+# puzzle0 = puzzle_o_eight()
+# puzzle1 = puzzle_o_eight(puzzle0) # to clone from puzzle0
+# to shuffle, use puzzle0.self_legal_shuffle(cnt). cnt is number of random moves to move in. 
+# usage of self_random_shuffle(cnt) is not recommended, since it can create unsolvable puzzles.
+# to use the algorithms:
+# bfs_8puzzle_solve(puzzle0) # this returns 3 things, the final state (completed puzzle); a list of all the states in the solution, and tuple containing expanded count and max frontier.
+# bfs_8puzzle_solve(puzzle0, True) sets tracing to true. in tracing mode, the algorithm displays current node, as well as all neighbors. to step through each iteration, press enter. 
